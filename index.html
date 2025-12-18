@@ -3,78 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mariage Paul & Mélanie</title>
+    <title>Paul & Mélanie | Juin 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <style>
-        body, html { margin: 0; padding: 0; font-family: 'Great Vibes', cursive; color: #333; overflow-x: hidden; }
-        section { height: 100vh; background-attachment: fixed; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 20px; }
-        h1, h2 { font-size: 4em; color: #fff; text-shadow: 2px 2px 10px rgba(0,0,0,0.7); }
-        p { font-size: 1.5em; color: #fff; max-width: 800px; text-shadow: 1px 1px 5px rgba(0,0,0,0.7); }
-        #home { background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://via.placeholder.com/1920x1080?text=Photo+Paul+et+Melanie'); }
-        #countdown { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://via.placeholder.com/1920x1080?text=Fleurs+Romantiques'); }
-        #story { background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://via.placeholder.com/1920x1080?text=Votre+Histoire'); }
-        #infos { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://via.placeholder.com/1920x1080?text=Lieu+Mariage'); }
-        .countdown-timer { font-size: 3em; color: #fff; }
-        .countdown-timer span { display: block; font-size: 1.5em; }
-        audio { position: fixed; bottom: 20px; right: 20px; z-index: 100; width: 300px; }
-        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Roboto&display=swap');
-        body { font-family: 'Roboto', sans-serif; }
-        h1, h2 { font-family: 'Great Vibes', cursive; }
+        :root {
+            --primary: #d4af97; /* Or rose */
+            --secondary: #f5f0eb; /* Beige doux */
+            --text: #333;
+            --accent: #8b7a6b;
+        }
+        body, html { margin: 0; padding: 0; font-family: 'Roboto', sans-serif; color: var(--text); overflow-x: hidden; background: #fff; }
+        nav { position: fixed; top: 0; width: 100%; background: rgba(255,255,255,0.9); z-index: 1000; padding: 15px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; }
+        nav a { margin: 0 20px; text-decoration: none; color: var(--primary); font-family: 'Playfair Display', serif; font-size: 1.2em; transition: color 0.3s; }
+        nav a:hover { color: var(--accent); }
+        section { height: 100vh; background-attachment: fixed; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 60px 40px; position: relative; }
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.4); z-index: 1; }
+        .content { position: relative; z-index: 2; max-width: 900px; animation: fadeIn 1.5s ease-out; }
+        h1 { font-family: 'Great Vibes', cursive; font-size: 6em; color: var(--primary); margin: 0; }
+        h2 { font-family: 'Playfair Display', serif; font-size: 3.5em; color: var(--primary); margin-bottom: 20px; }
+        p { font-size: 1.4em; line-height: 1.6; color: #555; max-width: 700px; }
+        /* Fonds thématiques */
+        #home { background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('https://meghanrosephotography.com/wp-content/uploads/black-balsam-knob-wedding-photos-rachel-dallas_0035.jpg'); } /* Couple romantique extérieur */
+        #countdown { background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://www.smashingtheglass.com/wp-content/uploads/2018/10/Jewish-wedding-La-Rocher-Calvi-Corsica-France_0057.jpg'); } /* Houppa extérieure */
+        #story { background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('https://meghanrosephotography.com/wp-content/uploads/rock-quarry-garden-elopement_0030.jpg'); } /* Couple portrait élégant */
+        #infos { background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://www.french-touch-photography.com/wp-content/uploads/wedding/portfolio2026/courthouse/15-young-courthouse-exchange-elegant.jpg'); } /* Mairie civile élégante */
+        #rsvp { background: linear-gradient(rgba(212,175,151,0.8), rgba(212,175,151,0.8)), url('https://www.smashingtheglass.com/wp-content/uploads/2014/11/Jewish-Wedding-Dancing-The-Hora_0046.jpg'); } /* Hora festive */
+        .countdown { display: flex; justify-content: center; gap: 40px; margin-top: 30px; flex-wrap: wrap; }
+        .countdown div { background: rgba(255,255,255,0.7); padding: 20px; border-radius: 50%; width: 120px; height: 120px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .countdown span { font-size: 2.5em; font-weight: bold; color: var(--primary); }
+        .countdown label { font-size: 1em; color: #777; margin-top: 5px; }
+        .event { background: rgba(255,255,255,0.9); padding: 20px; margin: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 700px; }
+        form { background: rgba(255,255,255,0.95); padding: 40px; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); max-width: 600px; margin: 20px auto; animation: fadeIn 1s; }
+        input, select, textarea { width: 100%; padding: 15px; margin: 10px 0; border: 2px solid var(--primary); border-radius: 10px; font-size: 1.1em; transition: border 0.3s, box-shadow 0.3s; }
+        input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(212,175,151,0.5); outline: none; }
+        button { background: var(--primary); color: white; padding: 15px 30px; border: none; border-radius: 50px; font-size: 1.3em; cursor: pointer; transition: 0.3s; animation: pulse 2s infinite; margin-top: 20px; }
+        button:hover { background: var(--accent); transform: scale(1.05); }
+        #response-message { margin-top: 20px; font-weight: bold; color: green; }
+        audio { position: fixed; bottom: 20px; right: 20px; z-index: 100; background: rgba(255,255,255,0.8); border-radius: 20px; padding: 10px; }
+        canvas { position: fixed; top: 0; left: 0; z-index: 0; pointer-events: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(212,175,151,0.7); } 70% { box-shadow: 0 0 0 10px rgba(212,175,151,0); } 100% { box-shadow: 0 0 0 0 rgba(212,175,151,0); } }
+        @media (max-width: 768px) { h1 { font-size: 4em; } h2 { font-size: 2.5em; } .countdown div { width: 90px; height: 90px; } .countdown span { font-size: 2em; } form { padding: 20px; } }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 </head>
 <body>
 
+    <canvas id="particles"></canvas>
+
+    <nav>
+        <a href="#home">Accueil</a>
+        <a href="#countdown">Compte à rebours</a>
+        <a href="#story">Notre histoire</a>
+        <a href="#infos">Programme</a>
+        <a href="#rsvp">RSVP</a>
+    </nav>
+
     <section id="home">
-        <h1>Paul & Mélanie</h1>
-        <p>Nous nous marions !</p>
-        <p>26 Juin 2026</p>
+        <div class="overlay"></div>
+        <div class="content">
+            <h1>Paul & Mélanie</h1>
+            <p>Nous nous unissons selon la tradition juive</p>
+            <p style="font-family: 'Playfair Display', serif; font-size: 2em; color: var(--primary);">Juin 2026</p>
+        </div>
     </section>
 
     <section id="countdown">
-        <h2>Le grand jour approche...</h2>
-        <div class="countdown-timer" id="timer"></div>
+        <div class="overlay"></div>
+        <div class="content">
+            <h2>La Houppa approche...</h2>
+            <p>Compte à rebours jusqu'au 26 juin 2026</p>
+            <div class="countdown" id="timer"></div>
+        </div>
     </section>
 
     <section id="story">
-        <h2>Notre histoire</h2>
-        <p>Paul et Mélanie se sont rencontrés en [année], et depuis, leur amour n'a cessé de grandir. Des moments simples aux aventures folles, chaque jour ensemble est une bénédiction. Nous sommes ravis de partager ce nouveau chapitre avec vous !</p>
-        <!-- Ajoutez vos photos ici -->
+        <div class="overlay"></div>
+        <div class="content">
+            <h2>Notre histoire d'amour</h2>
+            <p>Paul et Mélanie se sont rencontrés en [année], un véritable coup de foudre. Depuis, notre amour grandit chaque jour dans le respect de nos traditions. Nous sommes heureux de célébrer cet engagement sacré avec vous.</p>
+        </div>
     </section>
 
     <section id="infos">
-        <h2>Informations pratiques</h2>
-        <p>Cérémonie : [Heure] à [Lieu de la cérémonie]</p>
-        <p>Vin d'honneur & Soirée : [Heure] à [Lieu de la réception]</p>
-        <p>Dress code : Élégant / [thème si il y en a]</p>
-        <p>RSVP : Contactez-nous avant le [date limite]</p>
-        <p>Liste de mariage : [lien ou infos]</p>
+        <div class="overlay"></div>
+        <div class="content">
+            <h2>Programme du mariage</h2>
+            
+            <div class="event">
+                <h3 style="color: var(--primary);">Mariage civil à la Mairie</h3>
+                <p><strong>23 juin 2026</strong><br>
+                [Heure précise] <br>
+                [Nom et adresse de la Mairie]<br>
+                Cérémonie intime réservée à la famille proche.</p>
+            </div>
+            
+            <div class="event">
+                <h3 style="color: var(--primary);">Houppa & Soirée</h3>
+                <p><strong>26 juin 2026</strong><br>
+                [Heure de la Houppa] – Houppa en extérieur<br>
+                Suivie du vin d'honneur et de la soirée festive<br>
+                [Adresse du lieu]<br>
+                Dress code : Élégant (costume/cravate pour les hommes, robe longue conseillée)</p>
+            </div>
+            
+            <p>Liste de mariage : [lien ou informations]</p>
+            <p style="font-size:1.6em; margin-top:30px;"><a href="#rsvp" style="color:var(--primary); text-decoration:underline;">Répondez à l'invitation ici ! ➜</a></p>
+        </div>
     </section>
 
-    <!-- Musique de fond (Mariage d'Amour - libre de droits pour usage personnel) -->
+    <section id="rsvp">
+        <div class="overlay"></div>
+        <div class="content">
+            <h2>Répondez à l'invitation</h2>
+            <p>Précisez pour quel(s) événement(s) vous venez (mairie et/ou houppa & soirée). Confirmez avant le [date limite]. Mazal Tov !</p>
+            <form id="rsvp-form">
+                <input type="text" placeholder="Prénom" id="prenom" required>
+                <input type="text" placeholder="Nom" id="nom" required>
+                <input type="email" placeholder="Email" id="email" required>
+                <input type="number" placeholder="Nombre de personnes" min="1" max="10" id="personnes" required>
+                <select id="presence" required>
+                    <option value="">Présence</option>
+                    <option value="mairie-seulement">Mairie uniquement (23 juin)</option>
+                    <option value="houppa-soiree">Houppa & Soirée (26 juin)</option>
+                    <option value="les-deux">Les deux événements</option>
+                    <option value="non">Impossible de venir</option>
+                </select>
+                <textarea placeholder="Message, allergies alimentaires, etc." id="message" rows="4"></textarea>
+                <button type="submit">Envoyer ma réponse</button>
+                <p id="response-message"></p>
+            </form>
+        </div>
+    </section>
+
+    <!-- Musique : Mariage d'Amour -->
     <audio controls autoplay loop>
-        <source src="https://www.soundjay.com/free-music/sounds/romantic-piano-01.mp3" type="audio/mpeg">
-        <!-- Alternative populaire : https://archive.org/download/MariageDAmour_201809/Mariage%20D%27Amour.mp3 -->
+        <source src="https://archive.org/download/MariageDAmour_201809/Mariage%20D%27Amour.mp3" type="audio/mpeg">
         Votre navigateur ne supporte pas l'audio.
     </audio>
 
     <script>
-        // Countdown jusqu'au 26 juin 2026
+        // Countdown jusqu'au 26 juin 2026 (Houppa)
         const weddingDate = new Date("2026-06-26T00:00:00").getTime();
         const timer = document.getElementById("timer");
-
-        setInterval(() => {
+        function updateCountdown() {
             const now = new Date().getTime();
             const distance = weddingDate - now;
-
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            timer.innerHTML = `
+                <div><span>${days}</span><label>Jours</label></div>
+                <div><span>${hours}</span><label>Heures</label></div>
+                <div><span>${minutes}</span><label>Minutes</label></div>
+                <div><span>${seconds}</span><label>Secondes</label></div>
+            `;
+            if (distance < 0) timer.innerHTML = "<h3 style='color:white;'>Mazal Tov ! ❤️</h3>";
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
 
-            timer.innerHTML = `${days}<span>jours</span> ${hours}<span>heures</span> ${minutes}<span>minutes</span> ${seconds}<span>secondes</span>`;
+        // Particules cœurs (inchangé)
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const hearts = [];
+        for (let i = 0; i < 30; i++) {
+            hearts.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 15 + 10,
+                speed: Math.random() * 1 + 0.5
+            });
+        }
+        function drawHearts() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(212, 175, 151, 0.3)';
+            hearts.forEach(h => {
+                ctx.beginPath();
+                ctx.moveTo(h.x, h.y + h.size/4);
+                ctx.bezierCurveTo(h.x, h.y, h.x - h.size/2, h.y, h.x - h.size/2, h.y + h.size/4);
+                ctx.bezierCurveTo(h.x - h.size/2, h.y + h.size/2, h.x, h.y + h.size*0.8, h.x, h.y + h.size);
+                ctx.bezierCurveTo(h.x, h.y + h.size*0.8, h.x + h.size/2, h.y + h.size/2, h.x + h.size/2, h.y + h.size/4);
+                ctx.bezierCurveTo(h.x + h.size/2, h.y, h.x, h.y, h.x, h.y + h.size/4);
+                ctx.fill();
+                h.y -= h.speed;
+                if (h.y < -h.size) h.y = canvas.height + h.size;
+            });
+            requestAnimationFrame(drawHearts);
+        }
+        drawHearts();
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
 
-            if (distance < 0) timer.innerHTML = "C'est aujourd'hui ! ❤️";
-        }, 1000);
+        // EmailJS + RSVP
+        emailjs.init('YOUR_USER_ID'); // À REMPLACER
+
+        const form = document.getElementById('rsvp-form');
+        const messageEl = document.getElementById('response-message');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            messageEl.textContent = 'Envoi en cours...';
+            messageEl.style.color = '#777';
+
+            const templateParams = {
+                prenom: document.getElementById('prenom').value,
+                nom: document.getElementById('nom').value,
+                email: document.getElementById('email').value,
+                personnes: document.getElementById('personnes').value,
+                presence: document.getElementById('presence').options[document.getElementById('presence').selectedIndex].text,
+                message: document.getElementById('message').value
+            };
+
+            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+                .then(() => {
+                    messageEl.textContent = 'Merci ! Votre réponse a été envoyée. Mazal Tov ❤️';
+                    messageEl.style.color = 'green';
+                    form.reset();
+                }, (error) => {
+                    messageEl.textContent = 'Erreur : ' + error.text;
+                    messageEl.style.color = 'red';
+                });
+        });
     </script>
 
 </body>
